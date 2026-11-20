@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de la Obra | Lirio & Romance</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        lily: {
+                            50: '#FDF8FA', 100: '#FCEEF4', 200: '#F9DCE9', 300: '#F4BFD7', 400: '#EC93BC',
+                            500: '#E1659D', 600: '#CE427E', 700: '#B22F64', 800: '#932953', 900: '#7B2648', 950: '#4B1027',
+                        },
+                        lavender: {
+                            50: '#F8F7FC', 100: '#F1EFF9', 200: '#E5E0F4', 300: '#D1C7EB', 400: '#B6A5DF',
+                            500: '#9A82D0', 600: '#8364BE', 700: '#7051A6', 800: '#5E448A', 900: '#4E3971',
+                        },
+                        night: { 900: '#16111D', 800: '#1F1829', 700: '#2B2138', 600: '#3B2D4D' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem("theme") === "dark") {
+            document.documentElement.classList.add("dark");
+        }
+    </script>
+    <style>
+        /* Asegura que el contenedor ocupe toda la pantalla correctamente en modo fullscreen */
+        #video-wrapper:fullscreen {
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+        }
+        #video-wrapper:-webkit-full-screen {
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body class="bg-lily-50 text-slate-800 dark:bg-night-900 dark:text-slate-100 font-sans antialiased selection:bg-lily-500 selection:text-white">
+
+    <!-- ENCABEZADO -->
+    <header class="sticky top-0 z-40 glass-nav bg-white/85 dark:bg-night-900/85 border-b border-lily-200/70 dark:border-night-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="index.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-lily-100 dark:bg-night-800 text-lily-800 dark:text-lily-200 text-sm font-semibold hover:bg-lily-200 transition-colors">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Catálogo
+            </a>
+            <span class="font-serif text-xl font-bold bg-gradient-to-r from-lily-700 to-lavender-700 dark:from-lily-300 dark:to-lavender-300 bg-clip-text text-transparent">
+                Lirio & Romance
+            </span>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+        
+        <!-- TARJETA PRINCIPAL CON PORTADA GIRATORIA 3D -->
+        <div id="detail-container" class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start bg-white dark:bg-night-800 p-6 sm:p-10 rounded-3xl border border-lily-200/80 dark:border-night-700 shadow-xl">
+            
+            <!-- Columna de Portada Interactiva -->
+            <div class="md:col-span-5 space-y-3">
+                <div class="perspective-container relative aspect-[3/4] w-full cursor-pointer select-none group" ondblclick="toggleMediaMode()" title="Haz doble clic o usa el botón para girar entre Anime y Manga">
+                    <div id="cover-flip-inner" class="flip-card-inner shadow-2xl rounded-2xl">
+                        
+                        <!-- CARA FRONTAL: ANIME -->
+                        <div class="flip-card-front bg-slate-900 border-2 border-lily-300/40 dark:border-night-600">
+                            <img id="anime-cover-img" src="" alt="Portada Anime" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-lily-600/90 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider shadow-lg flex items-center gap-1.5">
+                                <i data-lucide="tv" class="w-3.5 h-3.5"></i> Edición Anime
+                            </div>
+                        </div>
+
+                        <!-- CARA TRASERA: MANGA -->
+                        <div class="flip-card-back bg-slate-900 border-2 border-lavender-400/60 dark:border-lavender-500/40">
+                            <img id="manga-cover-img" src="" alt="Portada Manga" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-night-900/80 via-transparent to-transparent"></div>
+                            <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-lavender-600/95 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider shadow-lg flex items-center gap-1.5">
+                                <i data-lucide="book-open" class="w-3.5 h-3.5"></i> Edición Manga
+                            </div>
+                            <div class="absolute bottom-4 inset-x-4 text-center">
+                                <span class="text-xs text-lavender-200 font-medium bg-night-900/70 px-3 py-1 rounded-full backdrop-blur-sm">Lectura Original</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Botón de Giro / Cambio de Modo -->
+                <button onclick="toggleMediaMode()" id="flip-mode-btn" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-lily-600 to-lavender-600 hover:from-lily-700 hover:to-lavender-700 text-white font-bold text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 active:scale-95">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    <span id="flip-btn-text">Girar a Manga (Leer Capítulos)</span>
+                </button>
+            </div>
+
+            <!-- Columna de Información -->
+            <div id="detail-info-container" class="md:col-span-7 space-y-5"></div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- VISTA 1: SECCIÓN DE ANIME                                   -->
+        <!-- ========================================================= -->
+        <section id="anime-media-section" class="fade-panel bg-white dark:bg-night-800 p-6 sm:p-8 rounded-3xl border border-lily-200/80 dark:border-night-700 shadow-xl space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-lily-100 dark:border-night-700 pb-4">
+                <div>
+                    <h3 class="font-serif text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="play-circle" class="w-6 h-6 text-lily-600"></i> <span id="player-anime-title">Reproductor</span>
+                    </h3>
+                    <p id="player-chapter-name" class="text-xs sm:text-sm font-bold text-lily-600 dark:text-lily-400 mt-1 uppercase tracking-wide"></p>
+                </div>
+                <span class="self-start sm:self-auto text-[11px] uppercase tracking-wider px-3 py-1 rounded-full bg-lily-100 dark:bg-night-700 text-lily-700 dark:text-lily-300 font-bold">Anime • HD Streaming</span>
+            </div>
+            
+            <!-- Contenedor de video con botón exclusivo para pantalla completa en el último minuto -->
+            <div id="video-wrapper" class="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl bg-slate-950 border border-lily-200/40 dark:border-night-700 flex items-center justify-center"></div>
+
+            <div class="space-y-3 pt-2">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Seleccionar Episodio:</h4>
+                <div id="anime-episodes-list" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- BLOQUE PARA CONTINUAR CON EL MANGA TRAS TERMINAR EL ANIME -->
+            <div id="continue-manga-callout" class="mt-6 p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-lavender-50 via-lily-50 to-lavender-50 dark:from-night-900 dark:via-night-800 dark:to-night-900 border border-lavender-200/90 dark:border-night-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+                <div class="space-y-1">
+                    <p class="font-serif text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-lavender-600 dark:text-lavender-400 shrink-0"></i>
+                        <span>¿Terminaste el anime y no sabes dónde seguir la historia?</span>
+                    </p>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                        Puedes continuar con el manga y seguir descubriendo cada detalle de la obra.
+                    </p>
+                </div>
+                <button type="button" onclick="goToMangaSection()" class="w-full sm:w-auto shrink-0 px-5 py-3 rounded-2xl bg-gradient-to-r from-lavender-600 to-lily-600 hover:from-lavender-700 hover:to-lily-700 text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                    <span>Ir al Manga</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- VISTA 2: SECCIÓN DE MANGA (LISTA DE CAPÍTULOS)             -->
+        <!-- ========================================================= -->
+        <section id="manga-media-section" class="hidden fade-panel bg-white dark:bg-night-800 p-6 sm:p-8 rounded-3xl border border-lavender-300/80 dark:border-night-700 shadow-xl space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-lavender-100 dark:border-night-700 pb-4">
+                <div>
+                    <h3 class="font-serif text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-6 h-6 text-lavender-600"></i> <span id="manga-section-title">Manga</span>
+                    </h3>
+                    <p class="text-xs sm:text-sm font-bold text-lavender-600 dark:text-lavender-400 mt-1 uppercase tracking-wide">Selecciona un capítulo para abrir el lector inmersivo</p>
+                </div>
+                <span class="self-start sm:self-auto text-[11px] uppercase tracking-wider px-3 py-1 rounded-full bg-lavender-100 dark:bg-night-700 text-lavender-700 dark:text-lavender-300 font-bold">Lector Pro</span>
+            </div>
+
+            <!-- Lista de Capítulos -->
+            <div id="manga-chapters-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        </section>
+
+        <!-- SECCIÓN DE RESEÑAS -->
+        <section class="bg-white dark:bg-night-800 p-6 sm:p-8 rounded-3xl border border-lily-200/80 dark:border-night-700 shadow-xl space-y-6">
+            <h3 class="font-serif text-2xl font-bold text-slate-900 dark:text-white">Reseñas y Calificaciones de la Comunidad</h3>
+            
+            <form onsubmit="submitUserReview(event)" class="space-y-4 p-5 bg-lavender-50 dark:bg-night-900 rounded-2xl border border-lavender-100 dark:border-night-700">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                        Califica esta obra: (<span id="rating-text-value" class="text-lily-600 dark:text-lily-400 font-extrabold text-sm">5.0</span> / 5.0)
+                    </span>
+                    <div id="star-display-container" class="flex gap-1 text-2xl text-amber-400 select-none cursor-pointer">
+                        <span onclick="setRating(1)">★</span><span onclick="setRating(2)">★</span><span onclick="setRating(3)">★</span><span onclick="setRating(4)">★</span><span onclick="setRating(5)">★</span>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <input type="range" id="star-range-input" min="0" max="5" step="0.5" value="5" oninput="onRangeChange(this.value)" class="w-full accent-lily-600 cursor-pointer h-2 bg-slate-200 dark:bg-night-700 rounded-lg">
+                </div>
+                <input type="text" id="review-author" required placeholder="Tu nombre o pseudónimo..." class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-night-800 border border-lily-200 dark:border-night-700 text-xs focus:ring-2 focus:ring-lily-500">
+                <textarea id="review-text" required placeholder="Escribe tu reseña u opinión detallada..." rows="3" class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-night-800 border border-lily-200 dark:border-night-700 text-xs focus:ring-2 focus:ring-lily-500"></textarea>
+                <button type="submit" class="px-6 py-2.5 rounded-full bg-lily-600 hover:bg-lily-700 text-white text-xs font-bold shadow-md transition-colors">Publicar Reseña</button>
+            </form>
+
+            <div id="reviews-list-container" class="space-y-3"></div>
+        </section>
+    </main>
+
+    <!-- ========================================================= -->
+    <!-- LECTOR DE MANGA PROFESIONAL (ESTILO WEB MODERNA)          -->
+    <!-- ========================================================= -->
+    <div id="manga-reader-modal" class="fixed inset-0 z-50 bg-[#0f0e13] hidden flex flex-col items-center justify-between overflow-hidden">
+        
+        <!-- Barra Superior Estilo Web (Idéntica a la de referencia) -->
+        <div class="w-full bg-[#16111d] border-b border-slate-800 px-4 py-3 flex flex-col items-center gap-2 shadow-lg">
+            <h2 id="reader-chapter-title" class="text-sm sm:text-base font-bold text-white text-center tracking-wide">Título del Capítulo</h2>
+            <div class="flex items-center gap-3 text-xs text-slate-400">
+                <span>Todos los capítulos están en <strong class="text-lavender-400">Lirio & Romance</strong></span>
+            </div>
+        </div>
+
+        <!-- Sub-barra de controles de lectura (Capítulo / Anterior / Siguiente) -->
+        <div class="w-full bg-[#1b1524] border-b border-slate-800 px-4 py-2 flex items-center justify-between text-xs text-slate-300">
+            <div class="flex items-center gap-2">
+                <span class="px-3 py-1 rounded bg-slate-800 text-slate-200 font-bold" id="reader-selector-label">Modo Lector Pro</span>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="closeMangaReaderModal()" class="px-3 py-1 rounded bg-rose-600 hover:bg-rose-700 text-white font-bold flex items-center gap-1 shadow transition-all">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i> Salir del Lector
+                </button>
+            </div>
+        </div>
+
+        <!-- Área Central del Visor (Oculta las barras grises y muestra el PDF limpio a lo ancho) -->
+        <div class="flex-1 w-full max-w-4xl p-0 sm:p-2 flex items-center justify-center relative overflow-hidden bg-black">
+            <!-- Usamos un truco CSS de escala/recorte o visor limpio para que ocupe todo el ancho sin bordes feos -->
+            <iframe id="manga-modal-iframe" class="w-full h-full border-0 bg-black" src="" frameborder="0"></iframe>
+        </div>
+
+        <!-- Barra Inferior de Créditos / Cierre -->
+        <div class="w-full bg-[#16111d] border-t border-slate-800 px-4 py-2.5 text-center text-[11px] text-slate-400">
+            <span>Disfruta de tu lectura en alta calidad • <a href="index.html" class="text-lavender-400 underline">Volver al inicio</a></span>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/data.js"></script>
+    <script>
+        let currentAnimeId = null;
+        let currentEpisodes = [];
+        let currentEpisodeIndex = 0;
+        let selectedStarRating = 5;
+        let isMangaMode = false;
+
+        // Segundos restantes del video para mostrar el botón de siguiente episodio (zona de ending / cierre)
+        const ENDING_WINDOW_SECONDS = 60;
+
+        function isVideoFullscreenActive() {
+            const wrapper = document.getElementById("video-wrapper");
+            const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+            return Boolean(wrapper && fsEl && (fsEl === wrapper || wrapper.contains(fsEl)));
+        }
+
+        function setMediaMode(mangaActive) {
+            isMangaMode = mangaActive;
+            const flipInner = document.getElementById("cover-flip-inner");
+            const btnText = document.getElementById("flip-btn-text");
+            const animeSection = document.getElementById("anime-media-section");
+            const mangaSection = document.getElementById("manga-media-section");
+
+            if (isMangaMode) {
+                flipInner.classList.add("is-flipped");
+                btnText.textContent = "Girar a Anime (Ver Capítulos)";
+                animeSection.classList.add("hidden");
+                mangaSection.classList.remove("hidden");
+            } else {
+                flipInner.classList.remove("is-flipped");
+                btnText.textContent = "Girar a Manga (Leer Capítulos)";
+                mangaSection.classList.add("hidden");
+                animeSection.classList.remove("hidden");
+            }
+        }
+
+        function toggleMediaMode() {
+            setMediaMode(!isMangaMode);
+        }
+
+        function goToMangaSection() {
+            setMediaMode(true);
+            const mangaSection = document.getElementById("manga-media-section");
+            if (mangaSection) {
+                mangaSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
+
+        function updateEpisodeButtonsUI() {
+            const episodeButtons = document.querySelectorAll("#anime-episodes-list button[data-ep-index]");
+            episodeButtons.forEach((btn) => {
+                const idx = parseInt(btn.getAttribute("data-ep-index"), 10);
+                if (idx === currentEpisodeIndex) {
+                    btn.className = "px-4 py-2 rounded-xl bg-lily-600 text-white text-xs font-bold transition-all flex items-center gap-2 shadow-md ring-2 ring-lily-300";
+                } else {
+                    btn.className = "px-4 py-2 rounded-xl bg-lily-100 dark:bg-night-700 hover:bg-lily-600 hover:text-white dark:hover:bg-lily-600 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all flex items-center gap-2";
+                }
+            });
+        }
+
+        function evaluateEndingNextButtonVisibility() {
+            const overlayNextBtn = document.getElementById("overlay-next-ep-btn");
+            if (!overlayNextBtn) return;
+
+            const hasNext = currentEpisodes.length > 0 && currentEpisodeIndex < currentEpisodes.length - 1;
+            const inFullscreen = isVideoFullscreenActive();
+            const videoEl = document.getElementById("main-anime-video");
+
+            let inEndingWindow = false;
+            if (videoEl) {
+                if (videoEl.ended) {
+                    inEndingWindow = true;
+                } else if (videoEl.duration && !isNaN(videoEl.duration)) {
+                    const remaining = videoEl.duration - videoEl.currentTime;
+                    inEndingWindow = remaining <= ENDING_WINDOW_SECONDS && remaining >= 0;
+                }
+            }
+
+            if (hasNext && inFullscreen && inEndingWindow) {
+                overlayNextBtn.classList.remove("hidden", "opacity-0", "pointer-events-none");
+                overlayNextBtn.classList.add("opacity-100", "pointer-events-auto");
+            } else {
+                overlayNextBtn.classList.add("hidden", "opacity-0", "pointer-events-none");
+                overlayNextBtn.classList.remove("opacity-100", "pointer-events-auto");
+            }
+        }
+
+        function playAnimeEpisode(title, url, epIndex = 0) {
+            const wrapper = document.getElementById("video-wrapper");
+            const chapterLabel = document.getElementById("player-chapter-name");
+            currentEpisodeIndex = epIndex;
+            chapterLabel.textContent = title;
+
+            if (!url || url.trim() === "") {
+                alert("Este episodio aún no tiene su enlace configurado.");
+                updateEpisodeButtonsUI();
+                return;
+            }
+
+            const hasNext = currentEpisodes.length > 0 && currentEpisodeIndex < currentEpisodes.length - 1;
+            const nextEpTitle = hasNext ? currentEpisodes[currentEpisodeIndex + 1].title : "Siguiente Episodio";
+
+            // Botón pequeño y discreto: visible únicamente en pantalla completa durante el último minuto / cierre
+            const nextOverlayHtml = `
+                <button
+                    id="overlay-next-ep-btn"
+                    type="button"
+                    onclick="event.stopPropagation(); playNextEpisode();"
+                    class="hidden opacity-0 pointer-events-none transition-opacity duration-300 fixed bottom-16 right-4 z-[2147483647] px-3 py-1.5 rounded-lg bg-slate-900/90 hover:bg-lily-600 text-white text-[11px] sm:text-xs font-semibold shadow-xl border border-white/25 backdrop-blur-md flex items-center gap-1.5 cursor-pointer active:scale-95"
+                    title="Saltar a ${nextEpTitle}"
+                >
+                    <span>Siguiente: ${nextEpTitle}</span>
+                    <i data-lucide="skip-forward" class="w-3.5 h-3.5"></i>
+                </button>
+            `;
+
+            if (url.includes("youtube.com") || url.includes("youtu.be")) {
+                wrapper.innerHTML = `
+                    <iframe class="w-full h-full" src="${url}" title="Reproductor" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    ${nextOverlayHtml}
+                `;
+            } else {
+                wrapper.innerHTML = `
+                    <video id="main-anime-video" controls autoplay playsinline class="w-full h-full object-contain bg-black">
+                        <source src="${url}" type="video/mp4">
+                        Tu navegador no soporta la reproducción de video.
+                    </video>
+                    ${nextOverlayHtml}
+                `;
+
+                const videoEl = document.getElementById("main-anime-video");
+                if (videoEl) {
+                    videoEl.addEventListener("timeupdate", evaluateEndingNextButtonVisibility);
+                    videoEl.addEventListener("ended", evaluateEndingNextButtonVisibility);
+                    videoEl.addEventListener("seeked", evaluateEndingNextButtonVisibility);
+                }
+            }
+
+            updateEpisodeButtonsUI();
+            lucide.createIcons();
+            evaluateEndingNextButtonVisibility();
+        }
+
+        function playNextEpisode() {
+            if (!currentEpisodes.length || currentEpisodeIndex >= currentEpisodes.length - 1) return;
+
+            const wasFullscreen = isVideoFullscreenActive();
+            const nextIndex = currentEpisodeIndex + 1;
+            const nextEp = currentEpisodes[nextIndex];
+
+            playAnimeEpisode(nextEp.title, nextEp.url, nextIndex);
+
+            if (wasFullscreen) {
+                const wrapper = document.getElementById("video-wrapper");
+                const reqFs = wrapper?.requestFullscreen || wrapper?.webkitRequestFullscreen;
+                if (reqFs) {
+                    Promise.resolve(reqFs.call(wrapper)).catch(() => {});
+                }
+            }
+        }
+
+        document.addEventListener("fullscreenchange", evaluateEndingNextButtonVisibility);
+        document.addEventListener("webkitfullscreenchange", evaluateEndingNextButtonVisibility);
+
+        // --- ABRIR LECTOR PROFESIONAL DE MANGA ---
+        function openMangaChapter(title, url) {
+            const modal = document.getElementById("manga-reader-modal");
+            const iframe = document.getElementById("manga-modal-iframe");
+            const titleLabel = document.getElementById("reader-chapter-title");
+
+            if (!url || url.trim() === "") {
+                alert("Este capítulo aún no tiene su enlace configurado en js/data.js.");
+                return;
+            }
+
+            titleLabel.textContent = title;
+            
+            // Forzamos parámetros limpios en el visor de Internet Archive si es un PDF para ocultar barras molestas (#toolbar=0&view=FitH)
+            let cleanUrl = url;
+            if (url.includes('.pdf') && !url.includes('#')) {
+                cleanUrl += '#toolbar=0&navpanes=0&scrollbar=0&view=FitH';
+            }
+
+            iframe.src = cleanUrl;
+            modal.classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+            lucide.createIcons();
+        }
+
+        function closeMangaReaderModal() {
+            const modal = document.getElementById("manga-reader-modal");
+            const iframe = document.getElementById("manga-modal-iframe");
+            iframe.src = "";
+            modal.classList.add("hidden");
+            document.body.style.overflow = "auto";
+        }
+
+        // --- SISTEMA DE ESTRELLAS ---
+        function setRating(rating) {
+            selectedStarRating = parseFloat(rating);
+            document.getElementById("star-range-input").value = selectedStarRating;
+            updateStarsVisual(selectedStarRating);
+        }
+
+        function onRangeChange(val) {
+            selectedStarRating = parseFloat(val);
+            updateStarsVisual(selectedStarRating);
+        }
+
+        function updateStarsVisual(rating) {
+            document.getElementById("rating-text-value").textContent = rating.toFixed(1);
+            const container = document.getElementById("star-display-container");
+            let html = "";
+            for (let i = 1; i <= 5; i++) {
+                if (rating >= i) {
+                    html += `<span onclick="setRating(${i})" class="text-amber-400 hover:scale-110 transition-transform">★</span>`;
+                } else if (rating >= i - 0.5) {
+                    html += `<span onclick="setRating(${i - 0.5})" class="relative inline-block text-slate-300 hover:scale-110 transition-transform">★<span class="absolute top-0 left-0 overflow-hidden text-amber-400" style="width: 50%;">★</span></span>`;
+                } else {
+                    html += `<span onclick="setRating(${i})" class="text-slate-300 hover:scale-110 transition-transform">★</span>`;
+                }
+            }
+            container.innerHTML = html;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            currentAnimeId = parseInt(params.get("id"));
+            const anime = animeCatalog.find(a => a.id === currentAnimeId);
+
+            if (!anime) {
+                document.getElementById("detail-container").innerHTML = `<p class="text-center col-span-full text-slate-500 py-10">Obra no encontrada.</p>`;
+                return;
+            }
+
+            document.getElementById("anime-cover-img").src = anime.customImage;
+            document.getElementById("manga-cover-img").src = anime.mangaCover || anime.customImage;
+
+            document.getElementById("detail-info-container").innerHTML = `
+                <div class="flex flex-wrap gap-2">
+                    ${anime.genres.map(g => `<span class="px-3 py-1 rounded-full bg-lily-100 dark:bg-night-700 text-lily-800 dark:text-lily-300 text-xs font-bold uppercase tracking-wider">${g}</span>`).join('')}
+                </div>
+                <h1 class="font-serif text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white">${anime.title}</h1>
+                <p class="text-sm text-slate-400 font-medium">${anime.jpTitle} • <span class="text-lily-600 font-semibold">${anime.year}</span> • <span>${anime.episodes}</span></p>
+                <div class="flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                    <span class="px-3 py-1 rounded-lg bg-slate-100 dark:bg-night-700">Estudio: <strong>${anime.studio}</strong></span>
+                    <span class="flex items-center gap-1 bg-amber-50 dark:bg-night-700 px-3 py-1 rounded-lg text-amber-600 dark:text-amber-400"><i data-lucide="star" class="w-4 h-4 fill-amber-400"></i> ${anime.rating} / 5.0</span>
+                </div>
+                <hr class="border-lily-100 dark:border-night-700">
+                <div class="space-y-2">
+                    <h3 class="font-serif text-xl font-bold text-slate-900 dark:text-white">Sinopsis Completa</h3>
+                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">${anime.synopsis}</p>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-lily-50/80 dark:bg-night-900/70 border border-lily-200/60 dark:border-night-700 flex items-center gap-3 text-xs text-slate-600 dark:text-slate-300">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-lily-500 shrink-0"></i>
+                    <span><strong>Tip interactivo:</strong> Haz <strong>doble clic</strong> sobre la portada o pulsa el botón inferior para girarla y alternar entre el Anime y los capítulos del Manga.</span>
+                </div>
+            `;
+
+            document.getElementById("player-anime-title").textContent = anime.title;
+            const episodesListContainer = document.getElementById("anime-episodes-list");
+
+            if (anime.episodesList && anime.episodesList.length > 0) {
+                currentEpisodes = anime.episodesList;
+                episodesListContainer.innerHTML = anime.episodesList.map((ep, idx) => `
+                    <button data-ep-index="${idx}" onclick="playAnimeEpisode('${ep.title.replace(/'/g, "\\'")}', '${ep.url}', ${idx})" class="px-4 py-2 rounded-xl bg-lily-100 dark:bg-night-700 hover:bg-lily-600 hover:text-white dark:hover:bg-lily-600 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all flex items-center gap-2">
+                        <i data-lucide="play" class="w-3.5 h-3.5"></i> ${ep.title}
+                    </button>
+                `).join("");
+                playAnimeEpisode(anime.episodesList[0].title, anime.episodesList[0].url, 0);
+            } else if (anime.trailerUrl) {
+                currentEpisodes = [{ title: "Episodio Único", url: anime.trailerUrl }];
+                episodesListContainer.innerHTML = "";
+                playAnimeEpisode("Episodio Único", anime.trailerUrl, 0);
+            }
+
+            document.getElementById("manga-section-title").textContent = `${anime.title} — Manga`;
+            const mangaListContainer = document.getElementById("manga-chapters-list");
+            
+            if (anime.mangaChapters && anime.mangaChapters.length > 0) {
+                mangaListContainer.innerHTML = anime.mangaChapters.map((ch, idx) => `
+                    <button onclick="openMangaChapter('${ch.title.replace(/'/g, "\\'")}', '${ch.url}')" class="flex items-center justify-between p-4 rounded-2xl bg-lavender-50/70 dark:bg-night-900 hover:bg-lavender-100 dark:hover:bg-night-700 border border-lavender-200/70 dark:border-night-700 transition-all text-left group shadow-sm hover:shadow-md">
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-xl bg-lavender-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow">${idx + 1}</span>
+                            <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-lavender-700 dark:group-hover:text-lavender-300">${ch.title}</span>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-lavender-100 dark:bg-night-800 text-lavender-700 dark:text-lavender-300 text-[11px] font-bold flex items-center gap-1 group-hover:bg-lavender-600 group-hover:text-white transition-colors">
+                            Leer <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                        </span>
+                    </button>
+                `).join("");
+            } else {
+                mangaListContainer.innerHTML = `<p class="col-span-full text-xs text-slate-400 italic py-4">Aún no hay capítulos de manga disponibles.</p>`;
+            }
+
+            renderDetailReviews();
+            setRating(5);
+            lucide.createIcons();
+        });
+
+        function renderDetailReviews() {
+            const anime = animeCatalog.find(a => a.id === currentAnimeId);
+            const container = document.getElementById("reviews-list-container");
+            if (!anime.reviews || anime.reviews.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic py-4">No hay reseñas registradas aún. ¡Sé el primero en opinar!</p>`;
+                return;
+            }
+            container.innerHTML = anime.reviews.map((r, index) => `
+                <div class="p-4 bg-lily-50/60 dark:bg-night-900 rounded-2xl border border-lily-200/60 dark:border-night-700 flex justify-between items-start gap-4">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <strong class="text-sm text-slate-900 dark:text-white">@${r.author}</strong>
+                            <span class="text-amber-500 text-xs">★ ${r.rating.toFixed(1)}</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">${r.text}</p>
+                    </div>
+                    <button onclick="deleteReview(${index})" class="p-2 rounded-xl text-rose-400 hover:text-white hover:bg-rose-500 transition-colors shrink-0">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>`).join("");
+            lucide.createIcons();
+        }
+
+        function submitUserReview(e) {
+            e.preventDefault();
+            const author = document.getElementById("review-author").value;
+            const text = document.getElementById("review-text").value;
+            const anime = animeCatalog.find(a => a.id === currentAnimeId);
+            if (anime) {
+                anime.reviews.unshift({ author, rating: selectedStarRating, text });
+                document.getElementById("review-author").value = "";
+                document.getElementById("review-text").value = "";
+                renderDetailReviews();
+            }
+        }
+
+        function deleteReview(index) {
+            const anime = animeCatalog.find(a => a.id === currentAnimeId);
+            if (anime && anime.reviews) {
+                anime.reviews.splice(index, 1);
+                renderDetailReviews();
+            }
+        }
+    </script>
+</body>
+</html>

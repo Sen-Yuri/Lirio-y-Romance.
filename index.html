@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lirio & Romance | Portal de Anime y Manga Yuri</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- CSS Separado -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        lily: {
+                            50: '#FDF8FA', 100: '#FCEEF4', 200: '#F9DCE9', 300: '#F4BFD7', 400: '#EC93BC',
+                            500: '#E1659D', 600: '#CE427E', 700: '#B22F64', 800: '#932953', 900: '#7B2648', 950: '#4B1027',
+                        },
+                        lavender: {
+                            50: '#F8F7FC', 100: '#F1EFF9', 200: '#E5E0F4', 300: '#D1C7EB', 400: '#B6A5DF',
+                            500: '#9A82D0', 600: '#8364BE', 700: '#7051A6', 800: '#5E448A', 900: '#4E3971',
+                        },
+                        night: { 900: '#16111D', 800: '#1F1829', 700: '#2B2138', 600: '#3B2D4D' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem("theme") === "dark") {
+            document.documentElement.classList.add("dark");
+        }
+    </script>
+</head>
+<body class="bg-lily-50 text-slate-800 dark:bg-night-900 dark:text-slate-100 font-sans antialiased selection:bg-lily-500 selection:text-white">
+
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ENCABEZADO -->
+    <header class="sticky top-0 z-40 glass-nav bg-white/85 dark:bg-night-900/85 border-b border-lily-200/70 dark:border-night-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4">
+                <a href="#" onclick="resetFilters(event)" class="flex items-center gap-3 group shrink-0">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-lily-400 via-lily-500 to-lavender-600 p-2 shadow-md shadow-lily-500/20 group-hover:scale-105 transition-transform flex items-center justify-center">
+                        <svg viewBox="0 0 64 64" fill="none" class="w-full h-full text-white" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M32 6C32 6 22 20 22 32C22 40 26.5 46 32 48C37.5 46 42 40 42 32C42 20 32 6 32 6Z" fill="currentColor" fill-opacity="0.95"/>
+                            <path d="M32 48C24 44 12 40 6 30C14 28 24 31 32 40" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M32 48C40 44 52 40 58 30C50 28 40 31 32 40" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="32" cy="27" r="2.5" fill="#FCEEF4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="font-serif text-2xl sm:text-3xl font-bold tracking-tight bg-gradient-to-r from-lily-700 via-lily-600 to-lavender-700 dark:from-lily-300 dark:via-lily-200 dark:to-lavender-300 bg-clip-text text-transparent block leading-none">
+                            Lirio & Romance
+                        </span>
+                        <span class="text-[11px] uppercase tracking-widest text-lily-600/80 dark:text-lily-300/70 font-semibold">Comunidad Girls' Love</span>
+                    </div>
+                </a>
+
+                <!-- BUSCADOR CON MENÚ DESPLEGABLE PRO -->
+                <div class="hidden md:flex flex-1 max-w-md mx-4 relative">
+                    <div class="relative w-full">
+                        <i data-lucide="search" class="w-4 h-4 text-lily-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="search-input-desktop" placeholder="Buscar anime por inicial (Ej: C, B)..." class="w-full pl-10 pr-10 py-2.5 rounded-full bg-lily-100/70 dark:bg-night-800 border border-lily-200 dark:border-night-700 text-sm focus:outline-none focus:ring-2 focus:ring-lily-500/50">
+                        <button id="clear-search-desktop" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-lily-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    </div>
+
+                    <!-- CONTENEDOR DESPLEGABLE DE RESULTADOS -->
+                    <div id="search-dropdown-results" class="absolute top-full left-0 right-0 mt-2 bg-[#16111D] dark:bg-night-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden hidden z-50 max-h-[420px] overflow-y-auto divide-y divide-slate-800">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="toggleFavoritesDrawer()" class="relative inline-flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-lily-100 hover:bg-lily-200/80 dark:bg-night-800 text-lily-800 dark:text-lily-200 font-medium text-sm border border-lily-200/60 dark:border-night-600">
+                        <i data-lucide="heart" class="w-4 h-4 text-lily-600 fill-lily-500/20"></i>
+                        <span class="hidden sm:inline">Mi Lista</span>
+                        <span id="favorites-count-badge" class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold rounded-full bg-lily-600 text-white">0</span>
+                    </button>
+                    <button id="theme-toggle" onclick="toggleDarkMode()" class="p-2.5 rounded-full bg-lavender-100 hover:bg-lavender-200 dark:bg-night-800 text-lavender-800 dark:text-lavender-200 border border-lavender-200/60 dark:border-night-600">
+                        <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+                        <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-amber-300"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Menú de categorías -->
+            <nav class="flex items-center gap-2 overflow-x-auto pb-3 pt-1 no-scrollbar">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 mr-1 shrink-0">Géneros:</span>
+                <button onclick="setGenreFilter('Todos')" data-genre="Todos" class="genre-pill px-4 py-2 rounded-full text-xs font-bold transition-all shrink-0 bg-lily-600 text-white shadow-md shadow-lily-600/30 ring-2 ring-lily-400 scale-105">Todos</button>
+                <button onclick="setGenreFilter('Romance Escolar')" data-genre="Romance Escolar" class="genre-pill px-4 py-2 rounded-full text-xs font-semibold transition-all shrink-0 bg-white dark:bg-night-800 text-slate-600 dark:text-slate-300 hover:bg-lily-100 border border-lily-200/80 dark:border-night-700 shadow-xs">🌸 Romance Escolar</button>
+                <button onclick="setGenreFilter('Fantasía')" data-genre="Fantasía" class="genre-pill px-4 py-2 rounded-full text-xs font-semibold transition-all shrink-0 bg-white dark:bg-night-800 text-slate-600 dark:text-slate-300 hover:bg-lily-100 border border-lily-200/80 dark:border-night-700 shadow-xs">✨ Fantasía</button>
+                <button onclick="setGenreFilter('Drama')" data-genre="Drama" class="genre-pill px-4 py-2 rounded-full text-xs font-semibold transition-all shrink-0 bg-white dark:bg-night-800 text-slate-600 dark:text-slate-300 hover:bg-lily-100 border border-lily-200/80 dark:border-night-700 shadow-xs">🎭 Drama</button>
+                <button onclick="setGenreFilter('Slice of Life')" data-genre="Slice of Life" class="genre-pill px-4 py-2 rounded-full text-xs font-semibold transition-all shrink-0 bg-white dark:bg-night-800 text-slate-600 dark:text-slate-300 hover:bg-lily-100 border border-lily-200/80 dark:border-night-700 shadow-xs">☕ Slice of Life</button>
+                <button onclick="setGenreFilter('Comedia')" data-genre="Comedia" class="genre-pill px-4 py-2 rounded-full text-xs font-semibold transition-all shrink-0 bg-white dark:bg-night-800 text-slate-600 dark:text-slate-300 hover:bg-lily-100 border border-lily-200/80 dark:border-night-700 shadow-xs">🎀 Comedia</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-14">
+
+        <!-- HERO -->
+        <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-lily-200/90 via-lavender-100 to-lily-100 dark:from-night-800 dark:to-lily-950/60 border border-lily-200 dark:border-night-700 shadow-xl p-6 sm:p-10 lg:p-12">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-7 space-y-5">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 dark:bg-night-900/70 text-lily-700 dark:text-lily-300 text-xs font-bold uppercase tracking-wider">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-lily-500"></i> Obra Maestra Destacada
+                    </div>
+                    <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
+                        Bloom Into You
+                        <span class="block text-xl sm:text-2xl font-sans font-medium text-lily-700 dark:text-lily-300 mt-1">Yagate Kimi ni Naru</span>
+                    </h1>
+                    <p class="text-slate-700 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
+                        Yuu Koito siempre ha soñado con experimentar el amor tal como lo describen los mangas shojo, pero al recibir su primera confesión no siente absolutamente nada.
+                    </p>
+                    <div class="flex gap-3">
+                        <button onclick="window.location.href='detail.html?id=1'" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-lily-600 to-lavender-600 text-white font-semibold text-sm shadow-lg hover:scale-105 transition-transform">
+                            <i data-lucide="book-open" class="w-4 h-4"></i> Ver detalles y reseñas
+                        </button>
+                    </div>
+                </div>
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative w-full max-w-sm aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/80 dark:border-night-700 bg-night-900">
+                        <img id="hero-cover-img" src="img/bloom-into-you.jpg" alt="Bloom Into You" class="w-full h-full object-cover object-center">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CATÁLOGO -->
+        <section id="catalogo" class="space-y-6">
+            <div class="flex justify-between items-end">
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">Catálogo Esencial Yuri</h2>
+                <select id="sort-select" onchange="renderCatalog()" class="px-3.5 py-2 rounded-xl bg-white dark:bg-night-800 border border-lily-200 dark:border-night-700 text-xs font-semibold">
+                    <option value="rating">Mejor valorados</option>
+                    <option value="year-desc">Más recientes</option>
+                    <option value="title">Alfabético (A-Z)</option>
+                </select>
+            </div>
+            <div id="anime-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+        </section>
+
+        <!-- SECCIÓN: CONOCE AL CREADOR -->
+        <section class="bg-white dark:bg-night-800 p-8 sm:p-10 rounded-3xl border border-lily-200 dark:border-night-700 shadow-xl flex flex-col md:flex-row items-center gap-8">
+            <!-- FOTO DE PERFIL DE SEN -->
+            <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl overflow-hidden shadow-xl shrink-0 border-2 border-lily-400/50 bg-night-900">
+                <img src="img/Sen.jpg" alt="Sen - Creador" class="w-full h-full object-cover">
+            </div>
+            <div class="space-y-3 text-center md:text-left">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-lily-100 dark:bg-night-700 text-lily-700 dark:text-lily-300 text-xs font-bold uppercase tracking-wider">
+                    <i data-lucide="heart" class="w-3.5 h-3.5 fill-lily-500 text-lily-500"></i> Creador del Proyecto
+                </div>
+                <h3 class="font-serif text-3xl font-bold text-slate-900 dark:text-white">Sobre mí y Lirio & Romance</h3>
+                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                    ¡Hola! Este espacio fue creado con muchísima pasión, dedicación y cariño por <strong>Sen</strong>. La idea nació con el propósito de construir un refugio digital elegante, limpio y acogedor para todos los amantes del género Girls' Love (Yuri), ofreciendo una experiencia de lectura y visualización impecable sin distracciones.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- PIE DE PÁGINA (FOOTER PROFESIONAL CON DERECHOS Y MARCA DE AGUA) -->
+    <footer class="bg-white dark:bg-night-900 border-t border-lily-200/70 dark:border-night-700 mt-20 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 text-center">
+            
+            <div class="flex items-center justify-center gap-2">
+                <span class="font-serif text-2xl font-bold bg-gradient-to-r from-lily-700 to-lavender-700 dark:from-lily-300 dark:to-lavender-300 bg-clip-text text-transparent">
+                    Lirio & Romance
+                </span>
+            </div>
+
+            <!-- Aviso de no lucro y derechos reservados -->
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                Este sitio web es un proyecto de fan sin fines de lucro creado con amor por la comunidad. Todos los derechos de los animes, mangas, imágenes y personajes presentados pertenecen a sus respectivos creadores, editoriales y estudios de animación originales.
+            </p>
+
+            <hr class="w-24 mx-auto border-lily-200 dark:border-night-700">
+
+            <!-- Marca de agua / Crédito del Creador -->
+            <p class="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center justify-center gap-1.5">
+                Diseñado y desarrollado con 
+                <i data-lucide="heart" class="w-3.5 h-3.5 text-lily-500 fill-lily-500"></i> 
+                por <span class="text-lily-600 dark:text-lily-400 font-bold">Sen</span> • Lirio & Romance © 2026
+            </p>
+        </div>
+    </footer>
+
+    <!-- PANEL LATERAL FAVORITOS -->
+    <div id="favorites-drawer" class="fixed inset-0 z-50 hidden justify-end bg-slate-950/50 backdrop-blur-xs">
+        <div class="w-full max-w-md bg-white dark:bg-night-800 h-full shadow-2xl flex flex-col justify-between p-6">
+            <div class="flex justify-between items-center border-b pb-4">
+                <h2 class="font-serif text-2xl font-bold text-slate-900 dark:text-white">Mi Lista Yuri</h2>
+                <button onclick="toggleFavoritesDrawer()"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div id="favorites-list-container" class="flex-1 overflow-y-auto py-4 space-y-3"></div>
+        </div>
+    </div>
+
+    <!-- Módulos de Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
