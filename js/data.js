@@ -43,7 +43,8 @@ const animeCatalog = [
         synopsis: "Yuzu Aihara, una fashionista acostumbrada a divertirse, se muda a una academia femenina estricta debido al segundo matrimonio de su madre. Allí choca fuertemente con Mei Aihara, la fría y calculadora presidenta del consejo estudiantil, quien resulta ser su nueva hermanastra.", 
         similarIds: [10, 1], 
         reviews: [] 
-    },
+    }
+    /*,
     { 
         id: 1, 
         title: "Bloom Into You", 
@@ -246,4 +247,5 @@ const animeCatalog = [
         similarIds: [4, 1], 
         reviews: [] 
     }
+    */
 ];
