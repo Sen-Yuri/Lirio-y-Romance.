@@ -230,14 +230,33 @@
                 id="manga-reader-backdrop-img"
                 src="img/manga-citrus.jpg"
                 alt="Ilustración del Manga"
-                class="absolute inset-0 w-full h-full object-cover object-top opacity-45 pointer-events-none select-none z-0"
+                class="absolute inset-0 w-full h-full object-cover object-top opacity-75 pointer-events-none select-none z-0"
             >
             <!-- Capa suave para mejorar contraste y legibilidad sobre la ilustración -->
             <div
                 aria-hidden="true"
-                class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/65 pointer-events-none z-[1]"
+                class="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/55 pointer-events-none z-[1]"
             ></div>
-            <!-- Visor del capítulo encima de la ilustración -->
+
+            <!-- Tarjeta limpia para celulares (oculta el recuadro gris nativo del PDF y muestra solo el botón Abrir sobre la imagen) -->
+            <div id="manga-mobile-open-card" class="hidden relative z-[2] flex-col items-center justify-center gap-4 px-6 py-7 rounded-3xl bg-night-900/80 border border-lavender-300/35 backdrop-blur-md shadow-2xl text-center max-w-xs mx-4">
+                <span class="px-3 py-1 rounded-full bg-lavender-600/90 text-white text-[11px] font-bold uppercase tracking-wider">
+                    Lectura en Móvil
+                </span>
+                <p id="manga-mobile-chapter-label" class="font-serif text-xl font-bold text-white"></p>
+                <a
+                    id="manga-mobile-open-link"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-lavender-600 to-lily-600 hover:from-lavender-700 hover:to-lily-700 text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 active:scale-95"
+                >
+                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                    <span>Abrir</span>
+                </a>
+            </div>
+
+            <!-- Visor del capítulo en escritorio -->
             <iframe id="manga-modal-iframe" class="relative z-[2] w-full h-full border-0 bg-transparent" src="" frameborder="0"></iframe>
         </div>
 
@@ -258,6 +277,10 @@
 
         // Segundos restantes del video para mostrar el botón de siguiente episodio (zona de ending / cierre)
         const ENDING_WINDOW_SECONDS = 60;
+
+        function isMobileDevice() {
+            return window.matchMedia("(max-width: 768px)").matches || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+        }
 
         function isVideoFullscreenActive() {
             const wrapper = document.getElementById("video-wrapper");
@@ -419,6 +442,9 @@
             const iframe = document.getElementById("manga-modal-iframe");
             const titleLabel = document.getElementById("reader-chapter-title");
             const backdropImg = document.getElementById("manga-reader-backdrop-img");
+            const mobileCard = document.getElementById("manga-mobile-open-card");
+            const mobileLabel = document.getElementById("manga-mobile-chapter-label");
+            const mobileLink = document.getElementById("manga-mobile-open-link");
 
             if (!url || url.trim() === "") {
                 alert("Este capítulo aún no tiene su enlace configurado en js/data.js.");
@@ -431,14 +457,35 @@
             }
 
             titleLabel.textContent = title;
-            
-            // Forzamos parámetros limpios en el visor de Internet Archive si es un PDF para ocultar barras molestas (#toolbar=0&view=FitH)
-            let cleanUrl = url;
-            if (url.includes('.pdf') && !url.includes('#')) {
-                cleanUrl += '#toolbar=0&navpanes=0&scrollbar=0&view=FitH';
+
+            if (isMobileDevice()) {
+                iframe.src = "";
+                iframe.classList.add("hidden");
+                if (mobileCard) {
+                    mobileCard.classList.remove("hidden");
+                    mobileCard.classList.add("flex");
+                }
+                if (mobileLabel) {
+                    mobileLabel.textContent = title;
+                }
+                if (mobileLink) {
+                    mobileLink.href = url;
+                }
+            } else {
+                if (mobileCard) {
+                    mobileCard.classList.add("hidden");
+                    mobileCard.classList.remove("flex");
+                }
+                iframe.classList.remove("hidden");
+
+                // Forzamos parámetros limpios en el visor de Internet Archive si es un PDF para ocultar barras molestas (#toolbar=0&view=FitH)
+                let cleanUrl = url;
+                if (url.includes('.pdf') && !url.includes('#')) {
+                    cleanUrl += '#toolbar=0&navpanes=0&scrollbar=0&view=FitH';
+                }
+                iframe.src = cleanUrl;
             }
 
-            iframe.src = cleanUrl;
             modal.classList.remove("hidden");
             document.body.style.overflow = "hidden";
             lucide.createIcons();
@@ -447,7 +494,12 @@
         function closeMangaReaderModal() {
             const modal = document.getElementById("manga-reader-modal");
             const iframe = document.getElementById("manga-modal-iframe");
+            const mobileCard = document.getElementById("manga-mobile-open-card");
             iframe.src = "";
+            if (mobileCard) {
+                mobileCard.classList.add("hidden");
+                mobileCard.classList.remove("flex");
+            }
             modal.classList.add("hidden");
             document.body.style.overflow = "auto";
         }
